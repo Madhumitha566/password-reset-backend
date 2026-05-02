@@ -1,18 +1,17 @@
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
+dotenv.config(); // Initialize environment variables
+
 const sendEmail = async (email, subject, message) => {
   try {
     const transporter = nodemailer.createTransport({
       service: 'gmail',
-     secure: true, // Use SSL
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, 
+        pass: process.env.EMAIL_PASS, // Note: Use an App Password for Gmail
       },
-    
     });
 
-    // 2. Define the email options
     const mailOptions = {
       from: `"Support Team" <${process.env.EMAIL_USER}>`,
       to: email,
@@ -20,13 +19,10 @@ const sendEmail = async (email, subject, message) => {
       html: message,
     };
 
-    // 3. Send the email
     const info = await transporter.sendMail(mailOptions);
-    
-    console.log("Email sent successfully: %s", info.messageId);
     return info;
   } catch (error) {
-    console.error("Error occurred while sending email:", error.message);
+    console.error("Nodemailer Error:", error.message);
     throw new Error("Email could not be sent");
   }
 };
