@@ -16,6 +16,12 @@ const sendEmail = async (email, subject, message) => {
           rejectUnauthorized:false
          }
     });
+      try {
+     await transporter.verify();
+     console.log("Server is ready to take our messages");
+     } catch (err) {
+  console.error("Verification failed:", err);
+      }
   
     const mailOptions = {
       from: `"Support Team" <${process.env.EMAIL_USER}>`,
