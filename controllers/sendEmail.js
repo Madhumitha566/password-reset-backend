@@ -5,9 +5,9 @@ dotenv.config(); // Initialize environment variables
 const sendEmail = async (email, subject, message) => {
   try {
     const transporter = nodemailer.createTransport({
-      service: 'smtp.gmail.com',
-      port:465,
-      secure:true,
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS, // Note: Use an App Password for Gmail
