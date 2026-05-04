@@ -12,6 +12,7 @@ const sendEmail = async (email, subject, message) => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS, // Note: Use an App Password for Gmail
       },
+      family: 4,
       tls:{
           rejectUnauthorized:false
          }
