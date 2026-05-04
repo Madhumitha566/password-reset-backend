@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
-import sendEmail from './sendEmail.js'; // Ensure path is correct
+import sendEmail from '../controllers/sendEmail.js'; // Ensure path is correct
 import jwt from 'jsonwebtoken';
 
 const generateToken = (user) => {
