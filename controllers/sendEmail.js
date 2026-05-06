@@ -1,44 +1,40 @@
-import nodemailer from 'nodemailer';
+import SibApiV3Sdk from 'sib-api-v3-sdk';
 import dotenv from 'dotenv';
-dotenv.config(); // Initialize environment variables
 
-const sendEmail = async (email, subject, message) => {
+dotenv.config();
+
+const sendEmail = async (email, subject, htmlContent) => {
   try {
-    const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS, // Note: Use an App Password for Gmail
-      },
-      family: 4,
-      tls:{
-          rejectUnauthorized:false
-         }
-    });
-      try {
-     await transporter.verify();
-     console.log("Server is ready to take our messages");
-     } catch (err) {
-  console.error("Verification failed:", err);
-      }
-  
-    const mailOptions = {
-      from: `"Support Team" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: subject,
-      html: message,
-    };
+    const defaultClient = SibApiV3Sdk.ApiClient.instance;
 
-    const info = await transporter.sendMail(mailOptions);
-    return info;
+    // Configure API Key
+    const apiKey = defaultClient.authentications['api-key'];
+    apiKey.apiKey = process.env.BREVO_API_KEY;
+
+    // Use the Transactional Emails API (not Campaign API) for password resets
+    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+
+    // Define the email settings
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.htmlContent = htmlContent;
+    sendSmtpEmail.sender = { 
+      name: "Support Team", 
+      email: process.env.EMAIL_USER 
+    };
+    sendSmtpEmail.to = [{ email: email }];
+
+    // Make the call
+    const data = await apiInstance.sendTransacEmail(sendSmtpEmail);
     
+    console.log("Brevo API called successfully. Message ID:", data.messageId);
+    return data;
   } catch (error) {
-    console.error("Nodemailer Error:", error.message);
-    throw new Error("Email could not be sent");
+    // Detailed error logging to catch "Invalid API Key" or "Unauthorized"
+    console.error("Brevo Error Status:", error.status);
+    console.error("Brevo Error Body:", error.response?.text || error.message);
+    throw new Error("Email could not be sent via Brevo");
   }
-   
 };
 
 export default sendEmail;
