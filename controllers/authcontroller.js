@@ -54,7 +54,9 @@ export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
-
+   if(validator.isEmail(email)){
+    return res.status(400).send({error:'Invaild email'})
+   }
     if (!user) return res.status(404).json({ message: "User not found" });
 
     // 1. Create a raw random token for the URL
@@ -84,8 +86,11 @@ export const forgotPassword = async (req, res) => {
     `;
 
     // 4. Trigger the Brevo API via our sendEmail utility
-   const emailResult= await sendEmail(email, subject, htmlContent);
-   console.log("Email sent successfully:", emailResult);
+    await sendEmail({
+      to: email,
+      subject: subject,
+      html: htmlContent
+    });
     res.status(200).json({ message: "Reset link sent to mail" });
   
 
