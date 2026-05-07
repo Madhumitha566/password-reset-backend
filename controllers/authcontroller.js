@@ -54,9 +54,6 @@ export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
     const user = await User.findOne({ email });
-   if(validator.isEmail(email)){
-    return res.status(400).send({error:'Invaild email'})
-   }
     if (!user) return res.status(404).json({ message: "User not found" });
 
     // 1. Create a raw random token for the URL
