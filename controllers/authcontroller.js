@@ -4,7 +4,7 @@ import User from '../models/User.js';
 import sendEmail from '../controllers/sendEmail.js'; 
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
-
+dotenv.config()
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -84,7 +84,7 @@ export const forgotPassword = async (req, res) => {
 
     // 4. Trigger the Brevo API via our sendEmail utility
     await sendEmail({
-      to: email,
+      to: process.env.EMAIL_FROM,
       subject: subject,
       html: htmlContent
     });
