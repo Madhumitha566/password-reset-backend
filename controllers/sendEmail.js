@@ -1,5 +1,6 @@
 import { BrevoClient, BrevoError } from '@getbrevo/brevo';
 import dotenv from 'dotenv'
+dotenv.config()
 const brevo = new BrevoClient({
   apiKey: process.env.BREVO_API_KEY, 
 });
@@ -14,7 +15,7 @@ const sendEmail=async ({ to, subject, content })=> {
       subject: subject,
       textContent: content,
       sender: { name: "My App", email: BREVO_LOGIN_EMAIL },
-      to: [{ email: BREVO_LOGIN_EMAIL }]
+      to: [{ email: to }]
     });
 
     return { success: true, messageId: result.messageId };
