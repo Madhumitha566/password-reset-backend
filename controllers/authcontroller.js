@@ -84,7 +84,7 @@ export const forgotPassword = async (req, res) => {
 
     // 4. Trigger the Brevo API via our sendEmail utility
     await sendEmail({
-      to: req.user?.email || process.env.EMAIL_FROM,
+      to: user.email || process.env.EMAIL_FROM,
       subject: subject,
       html: htmlContent
     });
