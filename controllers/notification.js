@@ -1,6 +1,6 @@
 import express from 'express';
 // Import the Brevo sendEmail function you created earlier
-import { sendEmail } from '../utils/emailService.js'; 
+import sendEmail from '../controllers/sendEmail.js';
 
 const router = express.Router();
 
